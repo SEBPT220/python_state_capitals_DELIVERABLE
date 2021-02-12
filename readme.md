@@ -21,7 +21,8 @@ already imported for you!
 Write the rest of your code in the `script` file. You can execute a python file
 by doing `python3 lib/script.py`
 
-Please turn in your submission by the deadline on your cohort calendar.
+4. When complete, submit your homework by making a pull request on this repository.
+Unless otherwise stated, assignments are due the next class day at 9 am ET.
 
 ## Requirements
 
