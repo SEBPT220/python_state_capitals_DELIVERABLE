@@ -16,20 +16,34 @@ def states_game():
     initial_question = input('Are you ready to play? (yes/no)')
 
     if initial_question.lower() == "yes":
+
+        for state in states:
+            if 'correct' not in state:
+                state['correct'] = 0
+            if 'incorrect' not in state:
+                state['incorrect'] = 0
+
         random.shuffle(states)  
         for state in states:
             print(f'Correct: {correct} and Wrong: {wrong}')
-            user_input = input(f'What is the capital of {state["name"]}? ')
+            user_input = input(f'What is the capital of {state["name"]}? (Type "hint" for a hint): ')
+
+            if user_input.lower() == "hint":
+                print(f'The first three letters of the capital are: {state["capital"][:3]}')
+                user_input = input(f'What is the capital of {state["name"]}? ')
 
             if user_input.lower() == state["capital"].lower():
                 print('Correct!')
                 correct += 1
+                state['correct'] += 1
             else:
                 print(f"Incorrect. The capital of {state['name']} is {state['capital']}.")
                 wrong += 1
+                state['incorrect'] -= 1
 
         print(f'Game Over! Final Score: Correct: {correct}, Wrong: {wrong}')
         play_again()
+
 
 states_game()
 
