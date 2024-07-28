@@ -31,10 +31,6 @@ def states_game():
         print(f'Game Over! Final Score: Correct: {correct}, Wrong: {wrong}')
         play_again()
 
-        print("Maybe next time!")
-        play_again()
-
-
 states_game()
 
 
