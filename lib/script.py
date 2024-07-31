@@ -1,6 +1,11 @@
 from capitals import states
 import random
 
+# Initialize correct and incorrect keys for each state
+for state in states:
+    state['correct'] = 0
+    state['incorrect'] = 0
+
 class StateQuiz:
     def __init__(self, state_name, capitals, answer):
         self.state_name = state_name
@@ -14,6 +19,9 @@ class Game:
         self.gameStates = states
 
     def randomState(self):
+        # Sort states by incorrect attempts first
+        self.gameStates.sort(key=lambda x: x['incorrect'], reverse=True)
+        
         # Select one random state for the state name
         random_state = random.choice(self.gameStates)
         state_name = random_state['name']
@@ -31,30 +39,38 @@ class Game:
 
         return StateQuiz(state_name, capitals, answer)
 
-    def checkChoice(self, userInput, capitals, answer, state_name):
+    def checkChoice(self, userInput, capitals, answer, state):
         if userInput == answer:
             self.rightTallies += 1
+            state['correct'] += 1  # Increment the correct key
+            print('Correct!')
             # Remove the state from gameStates
-            self.gameStates = [state for state in self.gameStates if state['name'] != state_name]
-            print('Correct!,', len(self.gameStates), "States left to match")
+            self.gameStates = [s for s in self.gameStates if s['name'] != state['name']]
             return True
         else:
             self.wrongTallies += 1
+            state['incorrect'] += 1  # Increment the incorrect key
             print(f"Incorrect. The correct capital is {answer}.")
             return False
 
     def gameStart(self):
         print("Welcome to State Matcher")
         print("Your goal is to match the correct capital to the state.")
+        
         while self.gameStates:
             quiz = self.randomState()
             print("\nState:", quiz.state_name)
             print("Capitals:", quiz.capitals)
-            userInput = input("Choose the capital: ")
-            if self.checkChoice(userInput, quiz.capitals, quiz.answer, quiz.state_name):
+            
+            userInput = input("Choose the capital (or type 'hint' for a hint): ")
+            if userInput.lower() == 'hint':
+                print(f"Hint: The first 3 letters of the capital are {quiz.answer[:3]}")
+                userInput = input("Choose the capital: ")
+            
+            state = next(s for s in self.gameStates if s['name'] == quiz.state_name)
+            if self.checkChoice(userInput, quiz.capitals, quiz.answer, state):
                 continue
             else:
-                # Give another chance if incorrect
                 print("Try again.")
         
         print("\nCongratulations! You've matched all the states!")
